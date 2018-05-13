@@ -1,4 +1,8 @@
-# TODO
+# AKKA CLUSTER EXAMPLE
+Thanks to mhamrah@github who's work in the following project helped a lot.
+https://github.com/mhamrah/akka-docker-cluster-example
+
+## TODO
 * Get the server to connect to the cluster and ask the cluster to do some work
 * Get all of this working in Kubernetes
 
@@ -8,3 +12,4 @@
 ## Useful links
 https://doc.akka.io/docs/akka/current/cluster-usage.html?language=scala
 http://blog.michaelhamrah.com/2014/03/running-an-akka-cluster-with-docker-containers/
+https://sachabarbs.wordpress.com/2016/10/05/akka-clustering/

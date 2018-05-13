@@ -4,7 +4,9 @@ import language.postfixOps
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 import akka.cluster.Cluster
 import akka.cluster.ClusterEvent._
+import com.patrickmcgeever.clusterexamplecommon.messages.WorkerJob
 import com.typesafe.config.ConfigFactory
+import ClusterExampleWorker._
 
 //#backend
 class ClusterExampleWorker extends Actor with ActorLogging {
@@ -48,22 +50,32 @@ class ClusterExampleWorker extends Actor with ActorLogging {
     case UnreachableMember(member) =>
       log.debug("Member detected as unreachable: {}", member)
     case MemberRemoved(member, previousStatus) =>
-      log.debug("Member is Removed: {} after {}",
-        member.address, previousStatus)
+      log.debug("Member is Removed: {} after {}", member.address, previousStatus)
     case LeaderChanged(member) => log.info("Leader changed: " + member)
+    case WorkerJob(number) => sender() ! primesUnder(number).sum
     case any: MemberEvent => log.info("Member Event: " + any.toString) // ignore
   }
-
 }
-//#backend
 
 object ClusterExampleWorker {
-  def main(args: Array[String]): Unit = {
-    val ipAddr = System.getenv("CLUSTER_IP")
-    println(s"IP ADDRESS IS: $ipAddr")
 
+  // Taken from:
+  // https://stackoverflow.com/questions/9711785/find-prime-numbers-using-scala-help-me-to-improve
+  def primesUnder(n: Long): List[Long] = {
+    require(n >= 2)
+    def rec(i: Long, primes: List[Long]): List[Long] = {
+      if (i >= n) primes
+      else if (prime(i, primes)) rec(i + 1, i :: primes)
+      else rec(i + 1, primes)
+    }
+    rec(2, List()).reverse
+  }
+
+  private def prime(num: Long, factors: List[Long]): Boolean = factors.forall(num % _ != 0)
+
+  def main(args: Array[String]): Unit = {
     val config = ConfigFactory.load()
     val system = ActorSystem(config.getString("clustering.cluster.name"), config)
-    system.actorOf(Props[ClusterExampleWorker], name = "backend")
+    system.actorOf(Props[ClusterExampleWorker], name = "worker")
   }
 }
