@@ -7,6 +7,7 @@ import akka.cluster.ClusterEvent._
 import com.patrickmcgeever.clusterexamplecommon.messages.WorkerJob
 import com.typesafe.config.ConfigFactory
 import ClusterExampleWorker._
+import akka.cluster.client.ClusterClientReceptionist
 
 //#backend
 class ClusterExampleWorker extends Actor with ActorLogging {
@@ -76,6 +77,7 @@ object ClusterExampleWorker {
   def main(args: Array[String]): Unit = {
     val config = ConfigFactory.load()
     val system = ActorSystem(config.getString("clustering.cluster.name"), config)
-    system.actorOf(Props[ClusterExampleWorker], name = "worker")
+    val worker = system.actorOf(Props[ClusterExampleWorker], name = "worker")
+    ClusterClientReceptionist(system).registerService(worker)
   }
 }

@@ -30,11 +30,13 @@ lazy val dockerSettings = Seq(
 )
 
 lazy val serverDeps = Seq(
-  akkaCluster
+  akkaCluster,
+  akkaClusterTools
 )
 
 lazy val workerDeps = Seq(
-  akkaCluster
+  akkaCluster,
+  akkaClusterTools
 )
 
 lazy val common = project
