@@ -1,6 +1,6 @@
 # TODO
-* Add actual clustering code to worker and code to send job to cluster from server
-* set up docker swarm to launch these docker containers
+* Get the server to connect to the cluster and ask the cluster to do some work
+* Get all of this working in Kubernetes
 
 ## Notes
 * If you are packaging the app inside docker rpm etc then you do not have to use the assembly plugin, the JavaAppPackager plugin will do the job, it creates a launch script in bin/ your jar and dep jars in lib/
