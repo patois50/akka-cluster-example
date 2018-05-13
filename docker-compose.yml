@@ -1,0 +1,28 @@
+version: '3'
+services:
+  seed:
+    image: pmcgeever/cluster-example-worker:latest
+    ports:
+      - '8000:8000'
+    environment:
+      CLUSTER_IP: seed
+      CLUSTER_PORT: 8000
+      SEED_PORT_8000_TCP_ADDR: seed
+
+  w1:
+    image: pmcgeever/cluster-example-worker:latest
+    ports:
+      - '8001:8001'
+    environment:
+      CLUSTER_IP: w1
+      CLUSTER_PORT: 8001
+      SEED_PORT_8000_TCP_ADDR: seed
+
+  w2:
+    image: pmcgeever/cluster-example-worker:latest
+    ports:
+      - '8002:8002'
+    environment:
+      CLUSTER_IP: w2
+      CLUSTER_PORT: 8002
+      SEED_PORT_8000_TCP_ADDR: seed
